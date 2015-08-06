@@ -35,6 +35,7 @@ set -exuo pipefail
 export OPENGROK_INSTANCE_BASE=/opt/app
 export OPENGROK_VERBOSE=1
 export OPENGROK_PROGRESS=1
+export OPENGROK_APP_SERVER="Tomcat"
 
 # Realize OpenGrok r/w dirs set up in build.sh
 mkdir -p /var/opengrok/data
@@ -42,7 +43,10 @@ mkdir -p /var/opengrok/etc
 mkdir -p /var/opengrok/src
 
 # Start OpenGrok's servlet container: Tomcat
-service tomcat7 start
+#sudo service tomcat7 start
+
+#export OPENGROK_TOMCAT_BASE=/var/lib/tomcat7/
+bash -xc "if [ -d \"/var/lib/tomcat7/webapps\" ]; then echo 'yay'; else echo 'nope'; fi"
 
 # Tell OpenGrok to initialize (search) indices
 cd $OPENGROK_INSTANCE_BASE/opengrok/bin
@@ -52,15 +56,3 @@ cd $OPENGROK_INSTANCE_BASE/opengrok/bin
 cd $OPENGROK_INSTANCE_BASE/opengrok/bin                                                                                                                            
 ./OpenGrok index
 
-
-
-## ... and we keep running the indexer to keep the container on
-#echo "** Waiting for source updates..."
-#touch $OPENGROK_INSTANCE_BASE/reindex
-#inotifywait -mr -e CLOSE_WRITE $OPENGROK_INSTANCE_BASE/src | while read f; do
-#  printf "*** %s\n" "$f"
-#  echo "*** Updating index"
-#  ./OpenGrok index
-#done
-
-#exit 0
