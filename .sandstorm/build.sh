@@ -22,21 +22,25 @@ set -exuo pipefail
 # appropriate for your application.
 
 
-# For env configuration, see:
-#  https://github.com/OpenGrok/OpenGrok/blob/master/OpenGrok
-export OPENGROK_INSTANCE_BASE=/opt/app
+## For env configuration, see:
+##  https://github.com/OpenGrok/OpenGrok/blob/master/OpenGrok
+#export OPENGROK_INSTANCE_BASE=/opt/app
 
-# Set up dangling symlinks to make OpenGrok r/w to /var
-# (we will realize the symlink sources in launch.sh)
-ln -sf /var/opengrok/data $OPENGROK_INSTANCE_BASE/data
-ln -sf /var/opengrok/etc  $OPENGROK_INSTANCE_BASE/etc
-ln -sf /var/opengrok/src  $OPENGROK_INSTANCE_BASE/src
+## Set up dangling symlinks to make OpenGrok r/w to /var
+## (we will realize the symlink sources in launch.sh)
+#ln -sf /var/opengrok/data $OPENGROK_INSTANCE_BASE/data
+#ln -sf /var/opengrok/etc  $OPENGROK_INSTANCE_BASE/etc
+#ln -sf /var/opengrok/src  $OPENGROK_INSTANCE_BASE/src
 
-cd $OPENGROK_INSTANCE_BASE
-if [ ! -d $OPENGROK_INSTANCE_BASE/opengrok ]
+# Stage an OpenGrok install
+cd /opt/app
+if [ ! -d opengrok ]
 then
   echo "Fetching a pre-build tarball of OpenGrok"
   wget -O - https://java.net/projects/opengrok/downloads/download/opengrok-0.12.1.tar.gz | tar zxvf -
   mv opengrok-* opengrok
 fi
+exit 0
+
+
 

@@ -30,14 +30,24 @@ apt-get update
 apt-get install -y \
   openjdk-7-jre-headless \
   exuberant-ctags \
-  git subversion \
+  git \
+  subversion \
   mercurial \
   tomcat7 \
-  wget \
-  inotify-tools
+  tomcat7-user \
+  wget
 
-# OpenGrok will use tomcat as a servlet container; let's
-# configure tomcat now.
-sed -i 's/port="8080"/port="8000"/' /etc/tomcat7/server.xml
-  # Sandstorm expects port 8000, Tomcat defaults to 8080
+service tomcat7 stop
+systemctl disable tomcat7
+
+# woof https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=435293
+
+
+
+## OpenGrok will use tomcat as a servlet container; let's
+## configure tomcat now.
+#ised --in-place='' \
+#  --expression='s/port="8080"/port="8000"/' \
+#  /etc/tomcat7/server.xml
+#    # Sandstorm expects port 8000, Tomcat defaults to 8080
 

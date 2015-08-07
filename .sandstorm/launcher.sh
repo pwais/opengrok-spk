@@ -29,30 +29,48 @@ set -exuo pipefail
 # By default, this script does nothing.  You'll have to modify it as
 # appropriate for your application.
 
+# Create a tomcat server for this user
+cd /var
+if [ ! -d tomgrok ]
+then
+  tomcat7-instance-create -p 8000 tomgrok # Sandstorm expects service on 8000
+fi
+
+# Start tomcat
+/var/tomgrok/bin/startup.sh
 
 # For env configuration, see:
 #  https://github.com/OpenGrok/OpenGrok/blob/master/OpenGrok
-export OPENGROK_INSTANCE_BASE=/opt/app
+#export OPENGROK_INSTANCE_BASE=/opt/app
 export OPENGROK_VERBOSE=1
 export OPENGROK_PROGRESS=1
 export OPENGROK_APP_SERVER="Tomcat"
+export OPENGROK_TOMCAT_BASE=/var/tomgrok/
 
-# Realize OpenGrok r/w dirs set up in build.sh
+# Init OpenGrok temp r/w dirs
 mkdir -p /var/opengrok/data
 mkdir -p /var/opengrok/etc
 mkdir -p /var/opengrok/src
 
 # Start OpenGrok's servlet container: Tomcat
-#sudo service tomcat7 start
+#/etc/init.d/tomcat7 start
+#service tomcat7 start
 
 #export OPENGROK_TOMCAT_BASE=/var/lib/tomcat7/
-bash -xc "if [ -d \"/var/lib/tomcat7/webapps\" ]; then echo 'yay'; else echo 'nope'; fi"
+#bash -xc "if [ -d \"/var/lib/tomcat7/webapps\" ]; then echo 'yay'; else echo 'nope'; fi"
+
+# Make OpenGrok dump 
+find /usr/lib -name libjli.so
+
+# WOOF http://unix.stackexchange.com/questions/16656/problem-to-launch-java-at-debian-error-while-loading-shared-libraries-libjli
+export LD_LIBRARY_PATH=/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/amd64/jli/
 
 # Tell OpenGrok to initialize (search) indices
-cd $OPENGROK_INSTANCE_BASE/opengrok/bin
-./OpenGrok deploy 
+cd /var/opengrok
+/opt/app/opengrok/bin/OpenGrok deploy 
 
 # Tell OpenGrok to run a preliminary index
-cd $OPENGROK_INSTANCE_BASE/opengrok/bin                                                                                                                            
-./OpenGrok index
+/opt/app/opengrok/bin/OpenGrok index
+#./OpenGrok index
 
+exit 0
