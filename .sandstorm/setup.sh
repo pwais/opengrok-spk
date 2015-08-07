@@ -29,6 +29,7 @@ export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get install -y \
   openjdk-7-jre-headless \
+  openjdk-7-jdk \
   exuberant-ctags \
   git \
   subversion \
