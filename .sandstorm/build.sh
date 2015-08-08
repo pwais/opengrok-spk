@@ -17,6 +17,5 @@ then
   mkdir -p demo_codes
   cd demo_codes
   git clone --depth 1 https://github.com/sandstorm-io/capnproto.git
-  git clone --depth 1 https://github.com/apache/spark.git
 fi
 

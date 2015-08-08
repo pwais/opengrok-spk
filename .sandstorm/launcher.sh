@@ -15,16 +15,13 @@ then
 	# Tomcat defaults to 8080
 fi
 
-# Have Tomcat redirect to OpenGrok's home at /source
-mkdir -p /var/tomgrok/webapps/ROOT/
-cat > /var/tomgrok/webapps/ROOT/index.html <<EOF
-<html>
-<head>
-  <meta http-equiv="refresh" content="0;URL=source">
-</head>
-<body></body>
-</html>
-EOF
+# Install a root Tomcat webapp (e.g. to redirect to
+# OpenGrok's /source homepage). NB: Tomcat doesn't
+# follow file symlinks by default.
+if [ ! -e /var/tomgrok/webapps/ROOT ] ; then
+  ln -s /opt/app/.sandstorm/tomgrok/ROOT \
+    /var/tomgrok/webapps/ROOT
+fi
 
 # Start tomcat
 /var/tomgrok/bin/startup.sh
